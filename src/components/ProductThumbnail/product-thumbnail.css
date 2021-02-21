@@ -1,0 +1,8 @@
+.product-thumbnail {
+    margin: 15px;
+    padding: 20px;
+    width: 176px;
+
+    display: flex;
+    flex-direction: column;
+}

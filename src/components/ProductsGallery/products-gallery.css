@@ -1,0 +1,13 @@
+.products-gallery {
+  width: 740px;
+}
+
+.products-gallery__title {
+  text-align: center;
+}
+
+.products-gallery__masonry {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
