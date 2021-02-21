@@ -4,6 +4,7 @@ import './shopping-cart.css';
 import Panel from "../Panel";
 import ItemThumbnail from "../ItemThumbnail";
 import {createdOrderVar} from "../../utils/cache";
+import Button from "../Button";
 
 export const SHOPPING_GALLERY = gql`
     query ShoppingCart($id: ID!) {
@@ -53,10 +54,10 @@ function ShoppingCart() {
       </div>
 
       {order && !!order.items.length && (
-        <div className="shopping-cart__buy">
-          <h3>{`Total: ${order.total}`}</h3>
-          <button type="button" onClick={handleOnBuyClick}>BUY</button>
-        </div>
+        <Panel className="shopping-cart__buy">
+          <h3>{`Total: ${order.total}€`}</h3>
+          <Button label="Buy" onClick={handleOnBuyClick}/>
+        </Panel>
       )}
     </Panel>
   );

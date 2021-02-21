@@ -3,6 +3,7 @@ import {gql, useApolloClient, useMutation} from "@apollo/client";
 import './item-thumbnail.css';
 import Panel from "../Panel";
 import {SHOPPING_GALLERY} from "../ShoppingCart";
+import Button from "../Button";
 
 const ITEM_THUMBNAIL_DELETE_ORDER = gql`
     mutation ItemThumbnailDeleteOrder($id: ID!) {
@@ -74,7 +75,9 @@ function ItemThumbnail({item}) {
         <span>{item.total}€</span>
       </div>
 
-      <button type="button" onClick={onRemoveFromCartClick}>Remove from Cart</button>
+      <div className="item-thumbnail__cta">
+        <Button label="Remove from Cart" onClick={onRemoveFromCartClick}/>
+      </div>
     </Panel>
   );
 }

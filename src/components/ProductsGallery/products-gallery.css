@@ -1,9 +1,11 @@
 .products-gallery {
   width: 740px;
+  height: 100%;
 }
 
 .products-gallery__title {
   text-align: center;
+  margin: 15px;
 }
 
 .products-gallery__masonry {

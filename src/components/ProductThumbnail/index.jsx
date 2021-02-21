@@ -4,6 +4,7 @@ import './product-thumbnail.css';
 import Panel from "../Panel";
 import {createdOrderVar} from "../../utils/cache";
 import {SHOPPING_GALLERY} from "../ShoppingCart";
+import Button from "../Button";
 
 const PRODUCT_THUMBNAIL_CREATE_ORDER = gql`
     mutation ProductThumbnailCreateOrder($input: CreateOrderInput!) {
@@ -127,6 +128,7 @@ function ProductThumbnail({product}) {
         <span>Name:</span>
         <span>{product.name}</span>
       </div>
+
       <div className="product-thumbnail__row">
         <span>Price:</span>
         <span>{product.price}€</span>
@@ -136,7 +138,10 @@ function ProductThumbnail({product}) {
         <label htmlFor="quantity">Quantity:</label>
         <input type="number" value={quantity} onChange={handleQuantityChange} min={0}/>
       </div>
-      <button type="button" onClick={onAddToCartClick}>Add to Shopping Cart</button>
+
+      <div className="product-thumbnail__cta">
+        <Button label="Add to Cart" disabled={!quantity} onClick={onAddToCartClick}/>
+      </div>
     </Panel>
   );
 }

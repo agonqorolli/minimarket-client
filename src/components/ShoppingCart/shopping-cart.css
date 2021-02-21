@@ -1,9 +1,11 @@
 .shopping-cart {
   width: 250px;
+  height: 100%;
 }
 
 .shopping-cart__title {
   text-align: center;
+  margin: 15px;
 }
 
 .shopping-cart__masonry {
@@ -13,8 +15,11 @@
 }
 
 .shopping-cart__buy {
+  margin: 15px;
+  padding: 20px;
+
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
