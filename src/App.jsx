@@ -3,6 +3,7 @@ import './App.css';
 
 import store from "./images/store.png"
 import ProductsGallery from "./components/ProductsGallery";
+import ShoppingCart from "./components/ShoppingCart";
 
 function App() {
   return (
@@ -12,7 +13,10 @@ function App() {
         <h1>MiniMarket App</h1>
       </div>
 
-      <ProductsGallery/>
+      <div className="app__content">
+        <ProductsGallery/>
+        <ShoppingCart/>
+      </div>
     </div>
   );
 }

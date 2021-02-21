@@ -1,4 +1,4 @@
-.product-thumbnail {
+.item-thumbnail {
   margin: 15px;
   padding: 20px;
   width: 176px;
@@ -7,12 +7,8 @@
   flex-direction: column;
 }
 
-.product-thumbnail__row {
+.item-thumbnail__row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.product-thumbnail__row input {
-  width: 40px;
 }

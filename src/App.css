@@ -1,12 +1,16 @@
 .app {
-    width: 1200px;
-    margin: 60px auto;
+  width: 1200px;
+  margin: 60px auto;
 }
 
 .app__header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
 }
 
+.app__content {
+  display: flex;
+  justify-content: space-between;
+}

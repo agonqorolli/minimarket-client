@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
-import {gql, useMutation} from "@apollo/client";
+import {gql, useMutation, useReactiveVar, useApolloClient} from "@apollo/client";
 import './product-thumbnail.css';
 import Panel from "../Panel";
+import {createdOrderVar} from "../../utils/cache";
+import {SHOPPING_GALLERY} from "../ShoppingCart";
 
 const PRODUCT_THUMBNAIL_CREATE_ORDER = gql`
     mutation ProductThumbnailCreateOrder($input: CreateOrderInput!) {
@@ -9,7 +11,9 @@ const PRODUCT_THUMBNAIL_CREATE_ORDER = gql`
             id
             customer_id
             # customer: Customer
-            # items: [Item]
+            items {
+                id
+            }
             total
             completed
         }
@@ -21,6 +25,9 @@ const PRODUCT_THUMBNAIL_CREATE_ITEM = gql`
         createItem(input: $input) {
             id
             order_id
+            order {
+                id
+            }
             product_id
             # product: Product
             quantity
@@ -30,13 +37,18 @@ const PRODUCT_THUMBNAIL_CREATE_ITEM = gql`
     }
 `;
 
-// Authenticating customer is out of the scope of this task
+// Authenticating customers is out of the scope of this task
 const CUSTOMER_ID = 1;
 
 function ProductThumbnail({product}) {
+  // Reactive Variables
+  const createdOrder = useReactiveVar(createdOrderVar);
+
+  // Apollo Client
+  const client = useApolloClient();
+
   // States
   const [quantity, setQuantity] = useState(0);
-  const [currentOrder, setCurrentOrder] = useState(null);
 
   // Mutations
   const [createOrderMutation] = useMutation(PRODUCT_THUMBNAIL_CREATE_ORDER);
@@ -69,26 +81,63 @@ function ProductThumbnail({product}) {
           total: quantity * product.price,
         }
       }
+    }).then(({data}) => {
+      const {createItem: newItem} = data;
+
+      const query = client.readQuery({
+        query: SHOPPING_GALLERY,
+        variables: {
+          id: order.id,
+        },
+      })
+
+      client.writeQuery({
+        query: SHOPPING_GALLERY,
+        variables: {
+          id: order.id,
+        },
+        data: {
+          order: {
+            ...query.order,
+            items: [...query.order.items, newItem],
+          },
+        },
+      });
+
+      setQuantity(0);
     })
   }
 
   function onAddToCartClick() {
-    createOrder().then(({data}) => {
-      const {createOrder: createdOrder} = data;
-      setCurrentOrder(createdOrder);
-      createItem(createdOrder);
-    })
+    if (createdOrder) {
+      createItem(createdOrder)
+    } else {
+      createOrder()
+        .then(({data}) => {
+          const {createOrder: newOrder} = data;
+          createdOrderVar(newOrder);
+          createItem(newOrder)
+        })
+    }
   }
 
   return (
     <Panel className="product-thumbnail">
-      <span>{`Name: ${product.name}`}</span>
-      <span>{`Price: ${product.price}€`}</span>
-      <label htmlFor="quantity">Quantity:</label>
-      <input type="number" value={quantity} onChange={handleQuantityChange} min={0}/>
-      <button type="button" onClick={onAddToCartClick}>Add to cart</button>
-    </Panel>
+      <div className="product-thumbnail__row">
+        <span>Name:</span>
+        <span>{product.name}</span>
+      </div>
+      <div className="product-thumbnail__row">
+        <span>Price:</span>
+        <span>{product.price}€</span>
+      </div>
 
+      <div className="product-thumbnail__row">
+        <label htmlFor="quantity">Quantity:</label>
+        <input type="number" value={quantity} onChange={handleQuantityChange} min={0}/>
+      </div>
+      <button type="button" onClick={onAddToCartClick}>Add to Shopping Cart</button>
+    </Panel>
   );
 }
 
