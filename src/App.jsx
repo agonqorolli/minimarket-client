@@ -2,8 +2,10 @@ import React from 'react';
 import {useQuery, gql} from "@apollo/client";
 import './App.css';
 
-const APP_PRODUCTS_QUERY = gql`
-    query Products {
+import store from "./images/store.png"
+
+const APP_PRODUCTS = gql`
+    query AppProducts {
         products {
             id
             name
@@ -14,14 +16,17 @@ const APP_PRODUCTS_QUERY = gql`
 
 function App() {
   // Queries
-  const {data: {products} = {}, loading, error} = useQuery(APP_PRODUCTS_QUERY);
+  const {data: {products} = {}, loading, error} = useQuery(APP_PRODUCTS);
 
   console.log('products', products);
   console.log('loading', loading, 'error', error);
 
   return (
     <div className="app">
-      MiniMarket App
+      <div className="app__header">
+        <img src={store} alt="store" width={128}/>
+        <h1>MiniMarket App</h1>
+      </div>
     </div>
   );
 }
