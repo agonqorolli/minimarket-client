@@ -1,2 +1,2 @@
-# minimarket-client
-React Implementation of Minimarket App
+# MiniMarket Client
+React Implementation of MiniMarket App
