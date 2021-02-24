@@ -10,6 +10,7 @@ const PRODUCTS_GALLERY = gql`
             id
             name
             price
+            image
         }
     }
 `;
@@ -28,7 +29,6 @@ function ProductsGallery() {
         {products && products.map(product => <ProductThumbnail key={product.id} product={product}/>)}
       </div>
     </Panel>
-
   );
 }
 

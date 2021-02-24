@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
 import {gql, useReactiveVar, useQuery} from "@apollo/client";
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
 import './shopping-cart.css';
 import Panel from "../Panel";
 import ItemThumbnail from "../ItemThumbnail";
@@ -17,6 +19,8 @@ export const SHOPPING_GALLERY = gql`
                     id
                     name
                     price
+                    image
+                    stripe_price
                 }
                 unit_price
                 quantity
@@ -26,6 +30,15 @@ export const SHOPPING_GALLERY = gql`
         }
     }
 `;
+
+let stripePromise;
+
+function getStripe(publishableKey) {
+  if (!stripePromise) {
+    stripePromise = loadStripe(publishableKey);
+  }
+  return stripePromise;
+}
 
 function ShoppingCart() {
   // Reactive Variables
@@ -40,7 +53,26 @@ function ShoppingCart() {
   });
 
   // Functions
-  function handleOnBuyClick() {
+  async function handleOnBuyClick(event) {
+    event.preventDefault();
+
+    getStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_TEST_KEY).then(stripe => {
+      stripe.redirectToCheckout({
+        mode: "payment",
+        lineItems: order ? order.items.map(item => {
+          return {
+            price: item.product.stripe_price,
+            quantity: item.quantity
+          };
+        }) : [],
+        successUrl: `http://localhost:3000/success`,
+        cancelUrl: `http://localhost:3000`,
+      }).then(result => {
+        console.log('result', result)
+      }).catch(error => {
+        console.log('error', error)
+      });
+    });
   }
 
   return (

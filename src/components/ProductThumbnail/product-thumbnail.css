@@ -10,7 +10,7 @@
 .product-thumbnail__row {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-bottom: 5px;
 }
 
@@ -19,6 +19,6 @@
 }
 
 .product-thumbnail__cta {
-  text-align: right;
+  text-align: center;
   margin-top: 15px;
 }

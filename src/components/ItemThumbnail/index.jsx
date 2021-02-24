@@ -5,9 +5,12 @@ import Panel from "../Panel";
 import {SHOPPING_GALLERY} from "../ShoppingCart";
 import Button from "../Button";
 
-const ITEM_THUMBNAIL_DELETE_ORDER = gql`
-    mutation ItemThumbnailDeleteOrder($id: ID!) {
-        deleteOrder(id: $id)
+const ITEM_THUMBNAIL_UPDATE_ORDER = gql`
+    mutation ItemThumbnailUpdateOrder($input: UpdateOrderInput!) {
+        updateOrder(input: $input) {
+            id
+            total
+        }
     }
 `;
 
@@ -22,10 +25,21 @@ function ItemThumbnail({item}) {
   const client = useApolloClient();
 
   // Mutations
-  const [deleteOrderMutation] = useMutation(ITEM_THUMBNAIL_DELETE_ORDER);
+  const [updateOrderMutation] = useMutation(ITEM_THUMBNAIL_UPDATE_ORDER);
   const [deleteItemMutation] = useMutation(ITEM_THUMBNAIL_DELETE_ITEM);
 
   // Functions
+  function updateOrder(order) {
+    return updateOrderMutation({
+      variables: {
+        input: {
+          id: order.id,
+          total: order.total - item.total,
+        }
+      }
+    })
+  }
+
   function onRemoveFromCartClick() {
     deleteItemMutation({
       variables: {
@@ -52,6 +66,8 @@ function ItemThumbnail({item}) {
             },
           },
         });
+
+        updateOrder(query.order);
       }
     });
   }

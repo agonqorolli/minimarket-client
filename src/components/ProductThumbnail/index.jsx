@@ -11,12 +11,19 @@ const PRODUCT_THUMBNAIL_CREATE_ORDER = gql`
         createOrder(input: $input) {
             id
             customer_id
-            # customer: Customer
             items {
                 id
             }
             total
-            completed
+        }
+    }
+`;
+
+const PRODUCT_THUMBNAIL_UPDATE_ORDER = gql`
+    mutation ProductThumbnailUpdateOrder($input: UpdateOrderInput!) {
+        updateOrder(input: $input) {
+            id
+            total
         }
     }
 `;
@@ -26,11 +33,7 @@ const PRODUCT_THUMBNAIL_CREATE_ITEM = gql`
         createItem(input: $input) {
             id
             order_id
-            order {
-                id
-            }
             product_id
-            # product: Product
             quantity
             unit_price
             total
@@ -53,6 +56,7 @@ function ProductThumbnail({product}) {
 
   // Mutations
   const [createOrderMutation] = useMutation(PRODUCT_THUMBNAIL_CREATE_ORDER);
+  const [updateOrderMutation] = useMutation(PRODUCT_THUMBNAIL_UPDATE_ORDER);
   const [createItemMutation] = useMutation(PRODUCT_THUMBNAIL_CREATE_ITEM);
 
   // Functions
@@ -66,6 +70,17 @@ function ProductThumbnail({product}) {
         input: {
           customer_id: CUSTOMER_ID,
           total: quantity * product.price,
+        }
+      }
+    })
+  }
+
+  function updateOrder(order) {
+    return updateOrderMutation({
+      variables: {
+        input: {
+          id: order.id,
+          total: order.total + (quantity * product.price),
         }
       }
     })
@@ -111,7 +126,10 @@ function ProductThumbnail({product}) {
 
   function onAddToCartClick() {
     if (createdOrder) {
-      createItem(createdOrder)
+      updateOrder(createdOrder)
+        .then(() => {
+          createItem(createdOrder)
+        })
     } else {
       createOrder()
         .then(({data}) => {
@@ -124,6 +142,10 @@ function ProductThumbnail({product}) {
 
   return (
     <Panel className="product-thumbnail">
+      <div className="product-thumbnail__row">
+        <img src={product.image} alt={product.name} height={100}/>
+      </div>
+
       <div className="product-thumbnail__row">
         <span>Name:</span>
         <span>{product.name}</span>
