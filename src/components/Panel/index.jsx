@@ -1,11 +1,10 @@
 import React from 'react';
 import './panel.css';
 
-function Panel({className, loading, children}) {
-  // TODO: Design better loading animation
+function Panel({className, children}) {
   return (
     <div className={`panel ${className || ''}`}>
-      {loading ? <div>loading...</div> : children}
+      {children}
     </div>
   );
 }

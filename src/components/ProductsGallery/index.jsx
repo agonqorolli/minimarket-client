@@ -20,7 +20,7 @@ function ProductsGallery() {
   const {data: {products} = {}, loading, error} = useQuery(PRODUCTS_GALLERY);
 
   return (
-    <Panel loading={loading} className="products-gallery">
+    <Panel className="products-gallery">
       <div className="products-gallery__title">
         <h2>Products Gallery</h2>
       </div>

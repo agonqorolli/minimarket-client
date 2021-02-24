@@ -56,6 +56,8 @@ function ShoppingCart() {
   async function handleOnBuyClick(event) {
     event.preventDefault();
 
+    const BASE_PATH = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'something else'
+
     getStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_TEST_KEY).then(stripe => {
       stripe.redirectToCheckout({
         mode: "payment",
@@ -65,8 +67,8 @@ function ShoppingCart() {
             quantity: item.quantity
           };
         }) : [],
-        successUrl: `http://localhost:3000/success`,
-        cancelUrl: `http://localhost:3000`,
+        successUrl: `${BASE_PATH}/success`,
+        cancelUrl: BASE_PATH,
       }).then(result => {
         console.log('result', result)
       }).catch(error => {
@@ -76,9 +78,10 @@ function ShoppingCart() {
   }
 
   return (
-    <Panel loading={loading} className="shopping-cart">
+    <Panel className="shopping-cart">
       <div className="shopping-cart__title">
         <h2>Shopping Cart</h2>
+        {(!order || (order && !order.items.length)) && <small>No Items Added in the Cart!</small>}
       </div>
 
       <div className="shopping-cart__masonry">
