@@ -10,10 +10,6 @@ const PRODUCT_THUMBNAIL_CREATE_ORDER = gql`
     mutation ProductThumbnailCreateOrder($input: CreateOrderInput!) {
         createOrder(input: $input) {
             id
-            customer_id
-            items {
-                id
-            }
             total
         }
     }
@@ -127,8 +123,10 @@ function ProductThumbnail({product}) {
   function onAddToCartClick() {
     if (createdOrder) {
       updateOrder(createdOrder)
-        .then(() => {
-          createItem(createdOrder)
+        .then(({data}) => {
+          const {updateOrder: updatedOrder} = data;
+          createdOrderVar(updatedOrder);
+          createItem(updatedOrder)
         })
     } else {
       createOrder()

@@ -4,6 +4,7 @@ import './item-thumbnail.css';
 import Panel from "../Panel";
 import {SHOPPING_GALLERY} from "../ShoppingCart";
 import Button from "../Button";
+import {createdOrderVar} from "../../utils/cache";
 
 const ITEM_THUMBNAIL_UPDATE_ORDER = gql`
     mutation ItemThumbnailUpdateOrder($input: UpdateOrderInput!) {
@@ -67,7 +68,11 @@ function ItemThumbnail({item}) {
           },
         });
 
-        updateOrder(query.order);
+        updateOrder(query.order)
+          .then(({data}) => {
+            const {updateOrder: updatedOrder} = data;
+            createdOrderVar(updatedOrder);
+          });
       }
     });
   }
