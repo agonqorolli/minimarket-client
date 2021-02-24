@@ -56,9 +56,9 @@ function ShoppingCart() {
   async function handleOnBuyClick(event) {
     event.preventDefault();
 
-    const BASE_PATH = process.env.NODE_ENV === 'production'
-      ? 'https://main.d2jsglc8ny66a.amplifyapp.com/'
-      : 'http://localhost:3000'
+    const BASE_PATH = process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000'
+      : 'https://main.d2jsglc8ny66a.amplifyapp.com/';
 
     getStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_TEST_KEY).then(stripe => {
       stripe.redirectToCheckout({
